@@ -139,7 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="damianLCD.cpp" />
     <ClCompile Include="TP06-Grupo07.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="basicLCD.h" />
+    <ClInclude Include="damianLCD.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
