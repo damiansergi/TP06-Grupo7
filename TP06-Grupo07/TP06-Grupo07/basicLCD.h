@@ -1,20 +1,25 @@
-#pragma once
+#ifndef basicLCD_H
+
+#define basicLCD_H
 
 #include <string>
+#include <iostream>
 
-struct cursorPosition
-{
+using namespace std;
+
+struct cursorPosition{
 	int row;
 	int column;
 };
 
-class lcdError
-{
-public:
-	string getErrorName();
-	string getErrorDescription();
-	unsigned long getErrorCode();
+
+class lcdError{
+	
+	string getErrorName(void);
+	string getErrorDescription(void);
+	unsigned long getErrorCode(void);
 };
+
 
 class basicLCD
 {
@@ -28,7 +33,8 @@ public:
 	*
 	* cadd =1 (cursor address) (ver NOTA 1)
 	*=====================================================*/
-	basicLCD();
+
+	//basicLCD();
 
 	/*=====================================================
 	* Name: ~basicLCD
@@ -38,7 +44,8 @@ public:
 	* que se hubiera tomado de forma de evitar
 	* "resources leak".
 	*=====================================================*/
-	~basicLCD();
+
+	//~basicLCD();
 
 	/*=====================================================
 	* Name: lcdInitOk
@@ -56,7 +63,7 @@ public:
 	* Resulta: No genera ningún cambio en el display.
 	* Devuelve en su nombre un lcdError&
 	*=====================================================*/
-	virtual lcdError lcdGetError() = 0;
+	virtual lcdError& lcdGetError() = 0;
 
 
 	/*=====================================================
@@ -110,7 +117,7 @@ public:
 	* basicLCD lcd;
 	* lcd << “Hola” << “ “ << “Mundo”;
 	*=====================================================*/
-	virtual basicLCD & operator<<(const unsigned char* c) = 0;
+	virtual basicLCD& operator<<(const char* c) = 0;
 
 	/*=====================================================
 	* Name: lcdMoveCursorUp
@@ -180,3 +187,7 @@ public:
 	* Devuelve una estructura tipo cursorPosition
 	*=====================================================*/
 	virtual cursorPosition lcdGetCursorPosition() = 0;
+
+};
+
+#endif // !basicLCD_H
