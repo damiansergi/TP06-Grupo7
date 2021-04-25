@@ -45,8 +45,9 @@ damianLCD::damianLCD() {
 
     display = al_create_display(ALLEGRODISPLAYWIDTH, ALLEGRODISPLAYHEIGHT);
 
-    pos.column = 0;
-    pos.row = 0;
+    pos.column = 1;
+    pos.row = 1;
+    message = string("");
 }
 
 damianLCD::~damianLCD() {
@@ -80,22 +81,21 @@ lcdError& damianLCD::lcdGetError() {
 bool damianLCD::lcdClear() {
 
     message.clear();
+    message.insert(0, "                                ");
 
     printMessage();
 
     return true;
 }
 
-bool damianLCD::lcdClearToEOL() {
-
-    message.erase(0, 15);
+bool damianLCD::lcdClearToEOL(){    //Arreglar estas funciones
 
     printMessage();
 
     return true;
 }
 
-basicLCD& damianLCD::operator<<(const unsigned char c) {
+basicLCD& damianLCD::operator<<(const unsigned char c) { 
 
     message.insert(CursorPosToNumber(pos),1, c);
 
@@ -103,6 +103,8 @@ basicLCD& damianLCD::operator<<(const unsigned char c) {
 
         message.erase(0, 1);
     }
+
+    printMessage();
 
     return *this;
 }
@@ -115,6 +117,8 @@ basicLCD& damianLCD::operator<<(const char* c) {
 
         message.erase(0, 1);
     }
+
+    printMessage();
 
     return *this;
 }
@@ -164,9 +168,7 @@ bool damianLCD::lcdSetCursorPosition(const cursorPosition pos) {
 
 cursorPosition damianLCD::lcdGetCursorPosition() {
 
-    cursorPosition salida = { 0,0 };
-
-    return salida;
+    return pos;
 }
 
 bool damianLCD::printMessage() {
@@ -207,13 +209,13 @@ bool damianLCD::printMessage() {
     for (int i = 0; i < message.size(); i++) {
         buffer[0] = message[i];
 
-        if (i < 15) {
+        if (i < 16) {
             al_draw_text(font, al_map_rgb(0, 0, 0), ((ALLEGRODISPLAYWIDTH - DISPLAYWIDTH) / 2) + 10 + 45 * i,
                 ((ALLEGRODISPLAYHEIGHT - DISPLAYHEIGHT) / 2),
                 0, buffer);
         }
         else if (i<32) {
-            al_draw_text(font, al_map_rgb(0, 0, 0), ((ALLEGRODISPLAYWIDTH - DISPLAYWIDTH) / 2) + 10 + 45 * (i - 15),
+            al_draw_text(font, al_map_rgb(0, 0, 0), ((ALLEGRODISPLAYWIDTH - DISPLAYWIDTH) / 2) + 10 + 45 * (i - 16),
                 ((ALLEGRODISPLAYHEIGHT - DISPLAYHEIGHT) / 2 + 60),
                 0, buffer);
         }
