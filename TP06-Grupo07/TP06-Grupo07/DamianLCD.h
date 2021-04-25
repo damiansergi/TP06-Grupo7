@@ -6,6 +6,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
 class damianLCD : public basicLCD {
 
@@ -26,12 +27,17 @@ public:
 	virtual bool lcdSetCursorPosition(const cursorPosition pos);
 	virtual cursorPosition lcdGetCursorPosition();
 
+	bool printMessage();
+
 private:
 
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_FONT* font;
 	lcdError damianLCDError;
 	bool error;
+
+	string message;
+	cursorPosition pos;
 };
 
 #endif // !damianLCD_H

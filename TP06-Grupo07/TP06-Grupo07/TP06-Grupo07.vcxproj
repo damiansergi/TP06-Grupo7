@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="basicLCD.cpp" />
     <ClCompile Include="damianLCD.cpp" />
     <ClCompile Include="TP06-Grupo07.cpp" />
   </ItemGroup>
