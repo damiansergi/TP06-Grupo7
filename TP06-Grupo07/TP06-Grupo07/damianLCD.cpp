@@ -47,7 +47,7 @@ damianLCD::damianLCD() {
 
     pos.column = 1;
     pos.row = 1;
-    message = string("");
+    message = string("                                ");
 }
 
 damianLCD::~damianLCD() {
@@ -81,14 +81,23 @@ lcdError& damianLCD::lcdGetError() {
 bool damianLCD::lcdClear() {
 
     message.clear();
-    message.insert(0, "                                ");
+    message = string("                                ");
 
     printMessage();
 
     return true;
 }
 
-bool damianLCD::lcdClearToEOL(){    //Arreglar estas funciones
+bool damianLCD::lcdClearToEOL(){  
+
+    if (pos.row == 1) {
+
+        message.replace(0, 16, "                ");
+    }
+    else if (pos.row == 2) {
+
+        message.replace(16, 16, "                ");
+    }
 
     printMessage();
 
@@ -97,12 +106,7 @@ bool damianLCD::lcdClearToEOL(){    //Arreglar estas funciones
 
 basicLCD& damianLCD::operator<<(const unsigned char c) { 
 
-    message.insert(CursorPosToNumber(pos),1, c);
-
-    while (message.size() > 32) {
-
-        message.erase(0, 1);
-    }
+    message.replace( CursorPosToNumber(pos) ,1,1, c);
 
     printMessage();
 
@@ -111,31 +115,31 @@ basicLCD& damianLCD::operator<<(const unsigned char c) {
 
 basicLCD& damianLCD::operator<<(const char* c) {
 
-    message.insert(CursorPosToNumber(pos), c);
+    string auxString = string(c);
+    int index = CursorPosToNumber(pos);
+    int copyIndex = 0;
 
-    while (message.size() > 32) {
+     while (auxString.size() > 32) {
 
-        message.erase(0, 1);
-    }
+         auxString.erase(0, 1);
+     }
+
+     while (index < 32 && copyIndex < auxString.size() ) {
+
+         message.replace(index, 1, 1, auxString[copyIndex] );
+         index++;
+         copyIndex++;
+     }
 
     printMessage();
 
     return *this;
 }
 
-bool damianLCD::lcdMoveCursorUp() {
+bool damianLCD::lcdMoveCursorLeft() {
 
-    if (pos.column >= 2) {
+    if (pos.column >= 1) {
         pos.column--;
-    }
-
-    return true;
-}
-
-bool damianLCD::lcdMoveCursorDown() {
-
-    if (pos.column <= 1) {
-        pos.column++;
     }
 
     return true;
@@ -143,16 +147,25 @@ bool damianLCD::lcdMoveCursorDown() {
 
 bool damianLCD::lcdMoveCursorRight() {
 
-    if (pos.row < 32) {
+    if (pos.column <= 32) {
+        pos.column++;
+    }
+
+    return true;
+}
+
+bool damianLCD::lcdMoveCursorDown() {
+
+    if (pos.row == 1) {
         pos.row++;
     }
 
     return true;
 }
 
-bool damianLCD::lcdMoveCursorLeft() {
+bool damianLCD::lcdMoveCursorUp() {
 
-    if (pos.row > 1) {
+    if (pos.row == 2) {
         pos.row--;
     }
 

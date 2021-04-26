@@ -5,17 +5,14 @@
 #include "milagrosLCD.h"
 #include <windows.h>
 
-#define DELAY 2500
+#define DELAY 1000
 
 
 int main()
 {
-    
-    damianLCD LCDDami;
     milagrosLCD LCDMili;
-
+    damianLCD LCDDami;
     basicLCD* p2LCD = nullptr;
-    basicLCD* p2LCD_2 = nullptr;
 
     for (int i = 1; i <= 2; i++) {  //CAMBIAR A I<=3 PARA PONER LAS OTRAS IMPLEMENTACIONES
 
@@ -25,7 +22,7 @@ int main()
         }
         else if (i == 2) {
 
-            p2LCD_2 = &LCDMili;
+            p2LCD = &LCDMili;
         }
         else if (i == 3) {
 
