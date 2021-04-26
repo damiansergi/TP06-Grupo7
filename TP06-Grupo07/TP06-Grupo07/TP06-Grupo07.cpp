@@ -29,48 +29,51 @@ int main()
             //Aca agreguen ustedes sus implementaciones
         }
 
-        *p2LCD << "There are no wrong notes on piano";
+        if (p2LCD->lcdInitOk()) {
 
-        Sleep(DELAY);
+            *p2LCD << "There are no wrong notes on piano";
 
-        p2LCD->lcdClearToEOL();
+            Sleep(DELAY);
 
-        Sleep(DELAY);
+            p2LCD->lcdClearToEOL();
 
-        *p2LCD << 'J';
+            Sleep(DELAY);
 
-        Sleep(DELAY);
+            *p2LCD << 'J';
 
-        p2LCD->lcdClear();
+            Sleep(DELAY);
 
-        Sleep(DELAY);
+            p2LCD->lcdClear();
 
-        cursorPosition testPos = { 1,10 };
-        p2LCD->lcdSetCursorPosition(testPos);
-        *p2LCD << 'I';
+            Sleep(DELAY);
 
-        Sleep(DELAY);
+            cursorPosition testPos = { 1,10 };
+            p2LCD->lcdSetCursorPosition(testPos);
+            *p2LCD << 'I';
 
-        p2LCD->lcdMoveCursorRight();
-        *p2LCD << 'U';
+            Sleep(DELAY);
 
-        Sleep(DELAY);
+            p2LCD->lcdMoveCursorRight();
+            *p2LCD << 'U';
 
-        p2LCD->lcdMoveCursorDown();
-        p2LCD->lcdMoveCursorLeft();
-        *p2LCD << 'P';
+            Sleep(DELAY);
 
-        Sleep(DELAY);
+            p2LCD->lcdMoveCursorDown();
+            p2LCD->lcdMoveCursorLeft();
+            *p2LCD << 'P';
 
-        p2LCD->lcdMoveCursorRight();
-        *p2LCD << 'I';
+            Sleep(DELAY);
 
-        Sleep(DELAY);
+            p2LCD->lcdMoveCursorRight();
+            *p2LCD << 'I';
 
-        p2LCD->lcdMoveCursorUp();
-        *p2LCD << "TEST123";
+            Sleep(DELAY);
 
-        Sleep(DELAY);
+            p2LCD->lcdMoveCursorUp();
+            *p2LCD << "TEST123";
+
+            Sleep(DELAY);
+        }
     }
 
     return 0;

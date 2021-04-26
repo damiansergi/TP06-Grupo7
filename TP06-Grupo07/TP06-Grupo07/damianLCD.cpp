@@ -82,6 +82,8 @@ bool damianLCD::lcdClear() {
 
     message.clear();
     message = string("                                ");
+    pos.row = 1;
+    pos.column = 1;
 
     printMessage();
 
@@ -106,10 +108,11 @@ bool damianLCD::lcdClearToEOL(){
 
 basicLCD& damianLCD::operator<<(const unsigned char c) { 
 
-    message.replace( CursorPosToNumber(pos) ,1,1, c);
+    if (isprint(c)) {
+        message.replace(CursorPosToNumber(pos), 1, 1, c);
 
-    printMessage();
-
+        printMessage();
+    }
     return *this;
 }
 
@@ -138,16 +141,27 @@ basicLCD& damianLCD::operator<<(const char* c) {
 
 bool damianLCD::lcdMoveCursorLeft() {
 
-    if (pos.column >= 1) {
+    if (pos.column == 1 && pos.row == 2) {
+
+        pos.column = 16;
+        pos.row = 1;
+    }
+    else if (pos.column > 1) {
         pos.column--;
     }
+
 
     return true;
 }
 
 bool damianLCD::lcdMoveCursorRight() {
 
-    if (pos.column <= 32) {
+    if (pos.column == 16 && pos.row == 1) {
+
+        pos.column = 1;
+        pos.row = 2;
+    }
+    else if (pos.column < 16) {
         pos.column++;
     }
 
@@ -174,7 +188,14 @@ bool damianLCD::lcdMoveCursorUp() {
 
 bool damianLCD::lcdSetCursorPosition(const cursorPosition pos) {
 
-    this->pos = pos;
+    if (pos.column <= 16 && pos.row <= 2 && pos.column >= 1 && pos.row >= 1) {
+            
+        this->pos = pos;
+    }
+    else {
+
+        return false;
+    }
 
     return true;
 }
