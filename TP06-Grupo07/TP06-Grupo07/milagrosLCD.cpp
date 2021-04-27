@@ -55,8 +55,6 @@ void milagrosLCD::clear_display() {
 	al_clear_to_color(AMARILLO); //Hace clear del backbuffer del diplay al color amarillo
 
 	al_flip_display(); //Flip del backbuffer, pasa a verse a la pantalla
-
-	al_rest(1.5);
 }
 
 /*=====================================================
@@ -160,6 +158,7 @@ basicLCD& milagrosLCD::operator<<(const unsigned char c) {
 * basicLCD lcd;
 * lcd << “Hola” << “ “ << “Mundo”;
 *=====================================================*/
+
 basicLCD& milagrosLCD::operator<<(const char* c) {
 	//Ver como hacer que si me llegan +32 caracteres se quede con los ultimos 32 nomas
 	/*if (sizeof(c) > 32) {
@@ -170,7 +169,6 @@ basicLCD& milagrosLCD::operator<<(const char* c) {
 	}*/
 	al_draw_textf(font, NEGRO, position.column, position.row, 0, c);
 	al_flip_display();
-	al_rest(6.0);
 
 	//update de la posicion del cursor
 	position.column += 4*16;
@@ -277,7 +275,7 @@ bool milagrosLCD::lcdMoveCursorLeft() {
 bool milagrosLCD::lcdSetCursorPosition(const cursorPosition pos) {
 	bool setOK = true; //Vale true si todo bien y false en caso contrario.
 	//Me fijo que los valores que me piden son correctos.
-	if (pos.column >= 2 || pos.column < 0 || pos.row >= 16 || pos.row <= 0) {
+	if (pos.column >= 2 || pos.column < 0 || pos.row >= 16 || pos.row < 0) {
 		setOK = false;
 		cout << "Invalid cursor position!" << endl;
 	}
