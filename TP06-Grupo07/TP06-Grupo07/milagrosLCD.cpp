@@ -65,7 +65,7 @@ void milagrosLCD::write_display() {
 			al_draw_text(font, NEGRO, getCoords(i), getCoords(0), 0, print);
 		}
 		if (i >= 16 && i < 32) {
-			al_draw_text(font, NEGRO, getCoords(i), getCoords(1), 0, print);
+			al_draw_text(font, NEGRO, getCoords(i-16), getCoords(1), 0, print);
 		}
 	}
 	al_flip_display();
@@ -106,6 +106,8 @@ bool milagrosLCD::lcdClear() {
 	//Lo establezco en la primer posicion
 	position.column = HOME_C;
 	position.row = HOME_R;
+
+	data = "                                ";
 	
 	al_clear_to_color(AMARILLO);
 	al_flip_display();
