@@ -1,25 +1,23 @@
 #include "milagrosLCD.h"
 
 milagrosLCD::milagrosLCD() {
-	position.column = HOME_C;
-	position.row = HOME_R;
+	data = "";
 	initOK = true;
-	//tengo que inicializar todo tipo el display, allegro etc
+	display = nullptr;
+	font = nullptr;
+
 	if (!al_init() && initOK) { //Primera funcion a llamar antes de empezar a usar allegro.
 		cout << "failed to initialize allegro!" << endl;
 		initOK = false;
 	}
-	//No se si es necesario tener esto
-	/*if (!al_init_primitives_addon()) {
-		fprintf(stderr, "failed to initialize primitives!\n");
-		initOK = false;
-	}*/
-
+	
 	//Inicializo las fuentes y letras.
 	init_fonts();
 
 	//Inicializo el display
 	init_display();
+
+	lcdClear();
 }
 
 milagrosLCD::~milagrosLCD() {
@@ -27,13 +25,11 @@ milagrosLCD::~milagrosLCD() {
 }
 
 void milagrosLCD::init_display(){
-	display = al_create_display(DISP_W, DISP_H); // Intenta crear display de 640x480 de fallar devuelve NULL
+	display = al_create_display(C_SIZE*(COLUMNS+1), C_SIZE*(ROWS+1)); // Intenta crear display dependiendo del tamaño de la letra que elija
 	if (!display && initOK) {
 		cout << "failed to create display!" << endl;
 		initOK = false;
 	}
-
-	clear_display();
 }
 
 void milagrosLCD::init_fonts() {
@@ -44,7 +40,7 @@ void milagrosLCD::init_fonts() {
 	if (!al_init_ttf_addon() && initOK) {
 		cout << "failed to initialize ttf addon!" << endl;
 	}
-	if (!(font = al_load_font("04B_30__.TTF", 16, 0))) {	//el 16 es el size, lo puedo cambiar si me parece muy grande o muy chico.
+	if (!(font = al_load_font("04B_30__.TTF", C_SIZE, 0))) {	//el 16 es el size, lo puedo cambiar si me parece muy grande o muy chico.
 		cout << "failed to initialize the font!\n" << endl;
 		initOK = false;
 	}
@@ -57,6 +53,22 @@ void milagrosLCD::clear_display() {
 	al_flip_display(); //Flip del backbuffer, pasa a verse a la pantalla
 
 	al_rest(1.5);
+}
+
+void milagrosLCD::write_display() {
+
+	al_clear_to_color(AMARILLO);
+	char print[2] = { 1,'\0'};
+	for (int i = 0; i < data.size(); ++i) {
+		print[0] = data[i];
+		if (i < 16) {
+			al_draw_text(font, NEGRO, getCoords(i), getCoords(0), 0, print);
+		}
+		if (i > 16 && i < 32) {
+			al_draw_text(font, NEGRO, getCoords(i), getCoords(1), 0, print);
+		}
+	}
+	al_flip_display();
 }
 
 /*=====================================================
@@ -81,7 +93,6 @@ lcdError& milagrosLCD::lcdGetError() {
 	return LCDError;
 }
 
-
 /*=====================================================
 * Name: lcdClear
 * Entra: -
@@ -92,10 +103,12 @@ lcdError& milagrosLCD::lcdGetError() {
 *=====================================================*/
 bool milagrosLCD::lcdClear() {
 	bool clearOK = true; //Vale true si todo bien y false en caso contrario.
+	//Lo establezco en la primer posicion
 	position.column = HOME_C;
 	position.row = HOME_R;
 	
-	clear_display();
+	al_clear_to_color(AMARILLO);
+	al_flip_display();
 
 	return clearOK;
 }
@@ -113,6 +126,21 @@ bool milagrosLCD::lcdClear() {
 bool milagrosLCD::lcdClearToEOL() {
 	bool clearOK = true; //Vale true si todo bien y false en caso contrario.
 	//Averiguar como borrar algunas letras.
+	/*if (position.row == 0) {
+		data.erase(data[position.column], data[COLUMNS - 1]);
+	}
+	else if (position.row == 1) {
+		data.erase(data[position.column + 16], data[(COLUMNS * 2) - 1]);
+	}*/
+	if (position.row == 0) {
+
+		data.replace(0, 16, "                ");
+	}
+	else if (position.row == 1) {
+
+		data.replace(16, 16, "                ");
+	}
+	write_display();
 	return clearOK;
 }
 
@@ -131,19 +159,25 @@ bool milagrosLCD::lcdClearToEOL() {
 * lcd << ‘a’ << ‘b’ << ‘c’;
 *=====================================================*/
 basicLCD& milagrosLCD::operator<<(const unsigned char c) {
-	//al_draw_textf(font, NEGRO, position.column, position.row, 0, c);
 	if (position.column == 15) {
 		position.column = 0;
-		if (position.row == 1) {
-			//no se q pasa
-		}
-		else {
+		if (position.row == 0) {
 			position.row = 1;
+		}
+		else if (position.column == 1){
+			position.row = 0;
 		}
 	}
 	else {
 		++position.column;
 	}
+	if (position.row == 0)
+		data.replace(position.column, 1, 1, c);
+	else if (position.row == 1)
+		data.replace(position.column+16, 1, 1, c);
+	cout << data << endl;
+	write_display();
+
 	return *this;
 }
 
@@ -161,19 +195,32 @@ basicLCD& milagrosLCD::operator<<(const unsigned char c) {
 * lcd << “Hola” << “ “ << “Mundo”;
 *=====================================================*/
 basicLCD& milagrosLCD::operator<<(const char* c) {
-	//Ver como hacer que si me llegan +32 caracteres se quede con los ultimos 32 nomas
-	/*if (sizeof(c) > 32) {
-		const char* new_c;
-		for (int i = sizeof(c), int f = 32; i > 32, f > 0; i--, --f){
-			new_c[f] = c[i];
+	string aux = string(c);
+	int cont = 0;
+	while(aux.size() > 32) {
+		aux.erase(0, 1);
+	}
+	while (cont < aux.size()) {
+		if (position.row == 0) {
+			data.replace(position.column, 1, 1, aux[cont]);
+			++position.column;
+			if (position.column >= 16) {
+				position.column = 0;
+				position.row = 1;
+			}
 		}
-	}*/
-	al_draw_textf(font, NEGRO, position.column, position.row, 0, c);
-	al_flip_display();
-	al_rest(6.0);
+		else if (position.row == 1) {
+			data.replace(position.column+16, 1, 1, aux[cont]);
+			++position.column;
+			if (position.column >= 16) {
+				position.column = 0;
+				position.row = 0;
+			}
+		}
+		++cont;
+	}
+	write_display();
 
-	//update de la posicion del cursor
-	position.column += 4*16;
 	return *this;
 }
 
@@ -296,4 +343,8 @@ bool milagrosLCD::lcdSetCursorPosition(const cursorPosition pos) {
 *=====================================================*/
 cursorPosition milagrosLCD::lcdGetCursorPosition() {
 	return position;
+}
+
+int milagrosLCD::getCoords(int num) {
+	return C_SIZE * num + C_SIZE;
 }

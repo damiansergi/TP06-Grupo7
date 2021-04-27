@@ -5,15 +5,18 @@
 #include "allegro5/allegro.h"
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <string>
 
-#define HOME_C 2	//invente, leer cuanto vale
-#define HOME_R 3	//invente, leer cuanto vale
+#define HOME_C	0	//invente, leer cuanto vale
+#define HOME_R	0	//invente, leer cuanto vale
+
+#define C_SIZE	45	//Tamaño de las letras
+
+#define COLUMNS	16
+#define ROWS	2
 
 #define DISP_W	400	//hay q ver cuanto vale
 #define DISP_H	200	//hay q ver cuanto vale
-
-#define COLUMN_GAP 20
-#define ROW_GAP 20
 
 #define NEGRO		al_map_rgb(0, 0, 0)
 #define ROSA		al_map_rgb(227, 13, 107)
@@ -51,13 +54,16 @@ private:
 	lcdError LCDError;
 	cursorPosition	position;
 	bool initOK;
-	string* data;
+	string data;
 
 
 	void init_display();
 	void init_fonts();
 
 	void clear_display();
+	void write_display();
+
+	int getCoords(int num);
 };
 
 #endif	//MILAGROS_LCD_H__
