@@ -51,8 +51,6 @@ void milagrosLCD::clear_display() {
 	al_clear_to_color(AMARILLO); //Hace clear del backbuffer del diplay al color amarillo
 
 	al_flip_display(); //Flip del backbuffer, pasa a verse a la pantalla
-
-	al_rest(1.5);
 }
 
 void milagrosLCD::write_display() {
@@ -307,7 +305,6 @@ bool milagrosLCD::lcdMoveCursorLeft() {
 		--position.column;
 		break;
 	}
-
 	return moveOK;
 }
 
@@ -324,7 +321,7 @@ bool milagrosLCD::lcdMoveCursorLeft() {
 bool milagrosLCD::lcdSetCursorPosition(const cursorPosition pos) {
 	bool setOK = true; //Vale true si todo bien y false en caso contrario.
 	//Me fijo que los valores que me piden son correctos.
-	if (pos.column >= 2 || pos.column < 0 || pos.row >= 16 || pos.row <= 0) {
+	if (pos.column >= 2 || pos.column < 0 || pos.row >= 16 || pos.row < 0) {
 		setOK = false;
 		cout << "Invalid cursor position!" << endl;
 	}
