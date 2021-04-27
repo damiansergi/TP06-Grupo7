@@ -142,11 +142,13 @@
     <ClCompile Include="basicLCD.cpp" />
     <ClCompile Include="damianLCD.cpp" />
     <ClCompile Include="milagrosLCD.cpp" />
+    <ClCompile Include="salvaLCD.cpp" />
     <ClCompile Include="TP06-Grupo07.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basicLCD.h" />
     <ClInclude Include="damianLCD.h" />
+    <ClInclude Include="salvaLCD.h" />
     <ClInclude Include="milagrosLCD.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
