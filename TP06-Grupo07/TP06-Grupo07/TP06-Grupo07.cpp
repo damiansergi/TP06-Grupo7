@@ -4,7 +4,6 @@
 #include "damianLCD.h"
 #include "milagrosLCD.h"
 #include "salvaLCD.h"
-#include <windows.h>
 
 #define DELAY 1 //seconds
 
@@ -73,10 +72,11 @@ int main()
             testLCD(p2LCD);
         }
         else if (i == 2) {
-
+            
             milagrosLCD LCDMili;
             p2LCD = &LCDMili;
             testLCD(p2LCD);
+            
         }
         else if (i == 3) {
 

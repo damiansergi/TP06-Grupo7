@@ -1,7 +1,7 @@
 #include "milagrosLCD.h"
 
 milagrosLCD::milagrosLCD() {
-	data = "";
+	data = "                                ";
 	initOK = true;
 	display = nullptr;
 	font = nullptr;
@@ -44,11 +44,13 @@ void milagrosLCD::init_fonts() {
 		cout << "failed to initialize the font!\n" << endl;
 		initOK = false;
 	}
-	
 }
 
 void milagrosLCD::clear_display() {
 	al_clear_to_color(AMARILLO); //Hace clear del backbuffer del diplay al color amarillo
+	data = "                                ";
+	position.column = HOME_C;
+	position.row = HOME_R;
 
 	al_flip_display(); //Flip del backbuffer, pasa a verse a la pantalla
 }
@@ -62,7 +64,7 @@ void milagrosLCD::write_display() {
 		if (i < 16) {
 			al_draw_text(font, NEGRO, getCoords(i), getCoords(0), 0, print);
 		}
-		if (i > 16 && i < 32) {
+		if (i >= 16 && i < 32) {
 			al_draw_text(font, NEGRO, getCoords(i), getCoords(1), 0, print);
 		}
 	}
@@ -344,5 +346,5 @@ cursorPosition milagrosLCD::lcdGetCursorPosition() {
 }
 
 int milagrosLCD::getCoords(int num) {
-	return C_SIZE * num + C_SIZE;
+	return C_SIZE * num + C_SIZE/2;
 }
