@@ -3,6 +3,7 @@
 #include <iostream>
 #include "damianLCD.h"
 #include "milagrosLCD.h"
+#include "salvaLCD.h"
 #include <windows.h>
 
 #define DELAY 1000
@@ -12,6 +13,7 @@ int main()
 {
     milagrosLCD LCDMili;
     damianLCD LCDDami;
+    salvaLCD LCDSalva; 
     basicLCD* p2LCD = nullptr;
 
     for (int i = 1; i <= 2; i++) {  //CAMBIAR A I<=3 PARA PONER LAS OTRAS IMPLEMENTACIONES
@@ -26,7 +28,7 @@ int main()
         }
         else if (i == 3) {
 
-            //Aca agreguen ustedes sus implementaciones
+            p2LCD = &LCDSalva; 
         }
 
         if (p2LCD->lcdInitOk()) {

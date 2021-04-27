@@ -13,8 +13,8 @@
 
 class salvaLCD : public basicLCD {
 	public: 
-		salvaLCD(); //Cosntructor
-		~salvaLCD(); //Destructor
+		salvaLCD(); 
+		~salvaLCD();
 
 		virtual bool lcdInitOk();
 		virtual lcdError& lcdGetError();
@@ -36,8 +36,6 @@ class salvaLCD : public basicLCD {
 		cursorPosition	Cursor;
 		string information_r1; 
 		string information_r2;
-
-		const char* data; 
 		bool Error; 
 
 };

@@ -14,6 +14,8 @@ bool must_init(bool test, const char* description)
 
 salvaLCD::salvaLCD() {
     Error = false; 
+    Cursor.column = 0;
+    Cursor.row = 0; 
 
     if (!(must_init(al_init(), "allegro")))
         Error = true; 
@@ -45,7 +47,6 @@ salvaLCD:: ~salvaLCD() {
 }
 
 bool salvaLCD::lcdInitOk() {
-	salvaLCD();
     return Error; //El constructor ya se encargo de ver si hubo error
 }
 
@@ -116,6 +117,53 @@ basicLCD& salvaLCD::operator<<(const unsigned char c) {
 
 basicLCD& salvaLCD::operator<<(const char* c) {
 
+    string aux = string(c);
+    
+    //Ver bien el tema de los nuemros de columna
+    if (Cursor.row == 0)
+    {
+        if (aux.length() > (15 - Cursor.column) )
+        {
+            information_r1.replace(Cursor.column, 15, aux);
+
+            if ((aux.length() - (15 - Cursor.column)) < 16)
+            {
+                information_r2.replace(0, (aux.length() - (15 - Cursor.column + 1 )), aux.substr((15 - Cursor.column), aux.length()));
+
+                for (int i = 0; i < aux.length(); i++) {
+                    lcdMoveCursorRight();
+                }
+            }
+            else
+            {
+                information_r2.replace(0, 15, aux.substr(15, 30));
+                Cursor.column = 15;
+            }  
+        }
+        else
+        {
+            information_r1.replace(Cursor.column, 15, aux);
+            for (int i = 0; i < aux.length(); i++) {
+                lcdMoveCursorRight();
+            }
+        }
+
+    }
+    else if (Cursor.row == 1)
+    {
+        information_r2.replace(Cursor.column, 15, aux);
+        for (int i = 0; i < aux.length(); i++) {
+            lcdMoveCursorRight();
+        }
+        if (Cursor.column > 15)
+        {
+            Cursor.column = 15;
+        }
+    }
+        
+
+    return *this; 
+    
 }
 
 //MOVIMIENTO DEL CURSOR
@@ -143,7 +191,7 @@ bool salvaLCD:: lcdMoveCursorDown(){
 }
 
 bool salvaLCD:: lcdMoveCursorRight() {
-    if (Cursor.column == 16) {   //Si estamos en el ultimo elemento de una fila
+    if (Cursor.column == 15) {   //Si estamos en el ultimo elemento de una fila
         if (Cursor.row == 1)     //Y es la segunda fila
             return true;         // Nos quedamos donde estamos
         else if (Cursor.row == 0)//Si es la fila es la primera
@@ -154,7 +202,7 @@ bool salvaLCD:: lcdMoveCursorRight() {
         }
         return false; //Si no paso nada de lo anterior debe haber un error
     }
-    else if ((Cursor.column < 16) && (Cursor.column > 0)) {// Si no estamos en el ultimo elemento y es mayor a 0(por si acaso hay un error)
+    else if ((Cursor.column < 15) && (Cursor.column > 0)) {// Si no estamos en el ultimo elemento y es mayor a 0(por si acaso hay un error)
         Cursor.column++;//Pasamos al siguiente elemento
         return true;
     }
@@ -168,7 +216,7 @@ bool salvaLCD:: lcdMoveCursorLeft() {
         else if (Cursor.row == 1)//Si es la fila es la segunda
         {
             Cursor.row = 0;      //Nos ponemos en el ultimo elemento de la primera
-            Cursor.column = 16;
+            Cursor.column = 15;
             return true;
         }
         return false; //Si no paso nada de lo anterior debe haber un error
