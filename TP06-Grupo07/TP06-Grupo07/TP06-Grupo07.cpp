@@ -56,13 +56,13 @@ void testLCD(basicLCD* p2LCD) {
         p2LCD->lcdMoveCursorRight();
         *p2LCD << 'I';
 
-        al_rest(DELAY);
+        al_rest(DELAY*5);
         cout << "test 8 finished" << endl;
 
         p2LCD->lcdMoveCursorUp();
         *p2LCD << "TEST123";
 
-        al_rest(DELAY);
+        al_rest(DELAY*5);
         cout << "test 9 finished" << endl;
 
         testPos.row = 1;
@@ -89,7 +89,7 @@ int main()
 
     basicLCD* p2LCD = nullptr;
 
-    for (int i = 1; i <= 3; i++) { 
+    for (int i = 3; i <= 3; i++) { 
 
         if (i == 1) {
 

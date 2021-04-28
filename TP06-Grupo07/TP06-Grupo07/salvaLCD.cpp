@@ -57,8 +57,6 @@ bool salvaLCD::lcdClear() {
 
     al_clear_to_color(al_map_rgb_f(0, 1, 0));//Verde
     al_flip_display(); 
-  
-    //al_rest(1.0);
 
     //Cursor a HOME - HOME es el primer elemento de la pantalla
     Cursor.column = 0;
@@ -98,7 +96,7 @@ basicLCD& salvaLCD::operator<<(const unsigned char c) {
 
     if (isprint(c)) {
         if (Cursor.row == 0)
-            information_r1.replace(Cursor.column, 1, 1, c);//TODO
+            information_r1.replace(Cursor.column, 1, 1, c);
         else if (Cursor.row == 1)
             information_r2.replace(Cursor.column, 1, 1, c);
 
@@ -124,7 +122,6 @@ basicLCD& salvaLCD::operator<<(const char* c) {
     if (aux.length() > 32)
         aux = aux.substr(aux.length() - 32, aux.length());//Corto lo que no quiero
 
-    //Ver bien el tema de los nuemros de columna
     if (Cursor.row == 0)//Si estamos en la primera fila
     {
         if (aux.length() > (16 - Cursor.column))//Y el string se va de linea, osea mueve al cursor mas alla de 16
@@ -133,7 +130,7 @@ basicLCD& salvaLCD::operator<<(const char* c) {
 
             if ((aux.length() - (16 - Cursor.column)) < 16)//Si lo que me queda por escribir es mas chico que 16, lo escribo
             {
-                information_r2.replace(0, (aux.length() - (16 - Cursor.column + 1)), aux.substr((16 - Cursor.column), aux.length()));
+                information_r2.replace(0, (aux.length() - (16 - Cursor.column)), aux.substr((16 - Cursor.column), aux.length()));
 
                 for (int i = 0; i < aux.length(); i++) {
                     lcdMoveCursorRight();
@@ -172,6 +169,9 @@ basicLCD& salvaLCD::operator<<(const char* c) {
             {
                 information_r1.replace(0, 15, aux.substr(16, 16));
                 Cursor.column = 15;
+                for (int i = 0; i < aux.length(); i++) {
+                    lcdMoveCursorRight();
+                }
             }
         }
         else
