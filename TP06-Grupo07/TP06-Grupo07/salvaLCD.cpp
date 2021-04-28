@@ -52,8 +52,8 @@ lcdError& salvaLCD::lcdGetError() {
 
 bool salvaLCD::lcdClear() {
 
-    this->information_r1.clear(); //Limpiamos el string de info
-    this->information_r2.clear();
+    information_r1.replace(0, 16, "                "); //Limpiamos el string de info
+    information_r2.replace(0,16, "                ");
 
     al_clear_to_color(al_map_rgb_f(0, 1, 0));//Verde
     al_flip_display(); 
