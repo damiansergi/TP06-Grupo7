@@ -7,16 +7,13 @@
 #include <allegro5/allegro_ttf.h>
 #include <string>
 
-#define HOME_C	0	//invente, leer cuanto vale
-#define HOME_R	0	//invente, leer cuanto vale
+#define HOME_C	0	
+#define HOME_R	0	
 
 #define C_SIZE	45	//Tamaño de las letras
 
 #define COLUMNS	16
 #define ROWS	2
-
-#define DISP_W	400	//hay q ver cuanto vale
-#define DISP_H	200	//hay q ver cuanto vale
 
 #define NEGRO		al_map_rgb(0, 0, 0)
 #define ROSA		al_map_rgb(227, 13, 107)

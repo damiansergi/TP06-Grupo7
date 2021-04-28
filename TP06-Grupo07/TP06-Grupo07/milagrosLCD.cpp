@@ -1,6 +1,7 @@
 #include "milagrosLCD.h"
 
 milagrosLCD::milagrosLCD() {
+	//Inicializo los datos miembro.
 	data = "                                ";
 	initOK = true;
 	display = nullptr;
@@ -40,7 +41,7 @@ void milagrosLCD::init_fonts() {
 	if (!al_init_ttf_addon() && initOK) {
 		cout << "failed to initialize ttf addon!" << endl;
 	}
-	if (!(font = al_load_font("04B_30__.TTF", C_SIZE, 0))) {	//el 16 es el size, lo puedo cambiar si me parece muy grande o muy chico.
+	if (!(font = al_load_font("04B_30__.TTF", C_SIZE, 0))) {	
 		cout << "failed to initialize the font!\n" << endl;
 		initOK = false;
 	}
@@ -59,6 +60,7 @@ void milagrosLCD::write_display() {
 
 	al_clear_to_color(AMARILLO);
 	char print[2] = { 1,'\0'};
+	//Voy imrpimiendo de a 1 letra.
 	for (int i = 0; i < (int)data.size(); ++i) {
 		print[0] = data[i];
 		if (i < 16) {
@@ -68,6 +70,7 @@ void milagrosLCD::write_display() {
 			al_draw_text(font, NEGRO, getCoords(i-16), getCoords(1), 0, print);
 		}
 	}
+	//Hago el flip para mostrarlo en el display todo de una.
 	al_flip_display();
 }
 
@@ -115,7 +118,6 @@ bool milagrosLCD::lcdClear() {
 	return clearOK;
 }
 
-
 /*=====================================================
 * Name: lcdClearToEOL
 * Entra: -
@@ -127,13 +129,6 @@ bool milagrosLCD::lcdClear() {
 *=====================================================*/
 bool milagrosLCD::lcdClearToEOL() {
 	bool clearOK = true; //Vale true si todo bien y false en caso contrario.
-	//Averiguar como borrar algunas letras.
-	/*if (position.row == 0) {
-		data.erase(data[position.column], data[COLUMNS - 1]);
-	}
-	else if (position.row == 1) {
-		data.erase(data[position.column + 16], data[(COLUMNS * 2) - 1]);
-	}*/
 	if (position.row == 0) {
 
 		data.replace(position.column, 16 - position.column, 16 - position.column, ' ');
@@ -145,7 +140,6 @@ bool milagrosLCD::lcdClearToEOL() {
 	write_display();
 	return clearOK;
 }
-
 
 /*=====================================================
 * Name: operator<<()
@@ -161,7 +155,7 @@ bool milagrosLCD::lcdClearToEOL() {
 * lcd << ‘a’ << ‘b’ << ‘c’;
 *=====================================================*/
 basicLCD& milagrosLCD::operator<<(const unsigned char c) {
-
+	//Lo imprime siempre que sea imprimible.
 	if (isprint(c)) {
 		if (position.row == 0)
 			data.replace(position.column, 1, 1, c);
@@ -171,7 +165,6 @@ basicLCD& milagrosLCD::operator<<(const unsigned char c) {
 		write_display();
 
 		lcdMoveCursorRight();
-
 	}
 
 	return *this;
@@ -190,13 +183,13 @@ basicLCD& milagrosLCD::operator<<(const unsigned char c) {
 * basicLCD lcd;
 * lcd << “Hola” << “ “ << “Mundo”;
 *=====================================================*/
-
 basicLCD& milagrosLCD::operator<<(const char* c) {
 	string aux = string(c);
 	int cont = 0;
 	while((int) aux.size() > 32) {
 		aux.erase(0, 1);
 	}
+	//Agrego lo enviado a la data del display. Además updateo el cursor.
 	while (cont < aux.size()) {
 		if (position.row == 0) {
 			data.replace(position.column, 1, 1, aux[cont]);
@@ -319,7 +312,7 @@ bool milagrosLCD::lcdMoveCursorLeft() {
 *=====================================================*/
 bool milagrosLCD::lcdSetCursorPosition(const cursorPosition pos) {
 	bool setOK = true; //Vale true si todo bien y false en caso contrario.
-	//Me fijo que los valores que me piden son correctos.
+	//Me fijo que los valores que me piden sean correctos.
 	if (pos.row >= 2 || pos.row < 0 || pos.column >= 16 || pos.column < 0) {
 		setOK = false;
 		cout << "Invalid cursor position!" << endl;
