@@ -5,7 +5,7 @@
 #include "milagrosLCD.h"
 #include "salvaLCD.h"
 
-#define DELAY 3 //seconds
+#define DELAY 1 //seconds
 
 void testLCD(basicLCD* p2LCD) {
 
