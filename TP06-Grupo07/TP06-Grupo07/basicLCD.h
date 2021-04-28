@@ -187,7 +187,6 @@ public:
 	* Devuelve una estructura tipo cursorPosition
 	*=====================================================*/
 	virtual cursorPosition lcdGetCursorPosition() = 0;
-
 };
 
 #endif // !basicLCD_H

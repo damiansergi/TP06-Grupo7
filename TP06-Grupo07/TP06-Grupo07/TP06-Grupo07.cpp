@@ -54,6 +54,14 @@ void testLCD(basicLCD* p2LCD) {
 
         al_rest(DELAY);
 
+        testPos.row = 1;
+        testPos.column = 14;
+        p2LCD->lcdClear();
+        p2LCD->lcdSetCursorPosition(testPos);
+        *p2LCD << "hola";
+
+        al_rest(5 * DELAY);
+
         p2LCD->lcdClear();
         *p2LCD << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 

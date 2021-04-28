@@ -133,6 +133,8 @@ basicLCD& damianLCD::operator<<(const char* c) {
          message.replace(index, 1, 1, auxString[copyIndex] );
          index++;
          copyIndex++;
+
+         lcdMoveCursorRight();
      }
 
     printMessage();
