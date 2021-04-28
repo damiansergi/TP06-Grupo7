@@ -67,6 +67,8 @@ bool salvaLCD::lcdClear() {
     return true; 
 
 }
+
+
 bool salvaLCD:: lcdClearToEOL() {
 
 
@@ -98,7 +100,7 @@ basicLCD& salvaLCD::operator<<(const unsigned char c) {
         if (Cursor.row == 0)
             information_r1.replace(Cursor.column, 1, 1, c);//TODO
         else if (Cursor.row == 1)
-            information_r2.replace(Cursor.column + 16, 1, 1, c);
+            information_r2.replace(Cursor.column, 1, 1, c);
 
         lcdMoveCursorRight();
 

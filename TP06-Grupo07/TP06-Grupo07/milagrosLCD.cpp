@@ -223,12 +223,10 @@ basicLCD& milagrosLCD::operator<<(const char* c) {
 		else if (position.row == 1) {
 			data.replace(position.column+16, 1, 1, aux[cont]);
 			++position.column;
-			/*
 			if (position.column >= 16) {
 				position.column = 0;
 				position.row = 0;
 			}
-			*/
 		}
 		++cont;
 	}
