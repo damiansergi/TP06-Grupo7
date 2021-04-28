@@ -8,8 +8,8 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_ttf.h>
 
-#define W 256
-#define H 64
+#define W 256*2
+#define H 64*2
 
 class salvaLCD : public basicLCD {
 	public: 

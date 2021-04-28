@@ -13,32 +13,28 @@ bool must_init(bool test, const char* description)
 }
 
 salvaLCD::salvaLCD() {
-    Error = false; 
+    Error = true; 
     Cursor.column = 0;
     Cursor.row = 0; 
 
     if (!(must_init(al_init(), "allegro")))
-        Error = true; 
+        Error = false; 
 
     if (!(must_init(al_install_keyboard(), "keyboard")))
-        Error = true;
+        Error = false;
 
     if (!(must_init(al_init_primitives_addon(), "primitives")))
-        Error = true; 
+        Error = false; 
 
     display = al_create_display(W, H);
     if (!(must_init(display, "display")))
-        Error = true;
+        Error = false;
 
     font = al_create_builtin_font();
     if (!(must_init(font, "font")))
-        Error = true;
+        Error = false;
 
-    //font = al_load_ttf_font();
-
-    //ALLEGRO_BITMAP* mysha = al_load_bitmap("mysha.png");
-    //must_init(mysha, "mysha");
-
+    cout << "Constructor true" << endl; 
 }
 
 salvaLCD:: ~salvaLCD() {
@@ -72,6 +68,8 @@ bool salvaLCD::lcdClear() {
 
 }
 bool salvaLCD:: lcdClearToEOL() {
+
+
     if (Cursor.row == 0)
     {
         al_draw_filled_rectangle(0, 0, W, H / 2, al_map_rgb_f(0, 1, 0));//Limpiamos la fila
@@ -95,21 +93,23 @@ bool salvaLCD:: lcdClearToEOL() {
 }
 
 basicLCD& salvaLCD::operator<<(const unsigned char c) {
+
     if (isprint(c)) {
         if (Cursor.row == 0)
-            information_r1.replace(Cursor.column, 1, 1, c);
+            information_r1.replace(Cursor.column, 1, 1, c);//TODO
         else if (Cursor.row == 1)
-            information_r2.replace(Cursor.column, 1, 1, c);
+            information_r2.replace(Cursor.column + 16, 1, 1, c);
+
+        lcdMoveCursorRight();
+
+        //Imprimiemos la pantalla de nuevo
+        al_clear_to_color( al_map_rgb_f(0, 1, 0));//Limpiamos todo
+
+        al_draw_text(font, al_map_rgb(255, 255, 255), W / 4, H / 4, 0, information_r1.c_str());     //Imprimimos primera fila
+        al_draw_text(font, al_map_rgb(255, 255, 255), W / 4, H * (0.75), 0, information_r2.c_str());//Imprimirmos segunda fila
+
+        al_flip_display();//Imprimimos todo lo escrito
     }
-    lcdMoveCursorRight();
-
-    //Imprimiemos la pantalla de nuevo
-    al_draw_filled_rectangle(0, 0, W, H, al_map_rgb_f(0, 1, 0));//Limpiamos todo
-
-    al_draw_text(font, al_map_rgb(255, 255, 255), W / 4, H / 4, 0, information_r1.c_str());     //Imprimimos primera fila
-    al_draw_text(font, al_map_rgb(255, 255, 255), W / 4, H * (0.75), 0, information_r2.c_str());//Imprimirmos segunda fila
-
-    al_flip_display();//Imprimimos todo lo escrito
 
     return *this;
 }
@@ -120,23 +120,23 @@ basicLCD& salvaLCD::operator<<(const char* c) {
     string aux = string(c);
     
     //Ver bien el tema de los nuemros de columna
-    if (Cursor.row == 0)
+    if (Cursor.row == 0)//Si estamos en la primera fila
     {
-        if (aux.length() > (15 - Cursor.column) )
+        if (aux.length() > (16 - Cursor.column) )//Y el string se va de linea, osea mueve al cursor mas alla de 16
         {
-            information_r1.replace(Cursor.column, 15, aux);
+            information_r1.replace(Cursor.column, 15, aux.substr(0, (16 - Cursor.column)));//Escribo lo que puedo en la linea 1
 
-            if ((aux.length() - (15 - Cursor.column)) < 16)
+            if ((aux.length() - (16 - Cursor.column)) < 16)//Si lo que me queda por escribir es mas chico que 16, lo escribo
             {
-                information_r2.replace(0, (aux.length() - (15 - Cursor.column + 1 )), aux.substr((15 - Cursor.column), aux.length()));
+                information_r2.replace(0, (aux.length() - (16 - Cursor.column + 1 )), aux.substr((16 - Cursor.column), aux.length()));
 
                 for (int i = 0; i < aux.length(); i++) {
                     lcdMoveCursorRight();
                 }
             }
-            else
+            else//Si el arreglo no entra en toda la linea dos lo corto 
             {
-                information_r2.replace(0, 15, aux.substr(15, 30));
+                information_r2.replace(0, 15, aux.substr(16, 16));
                 Cursor.column = 15;
             }  
         }
@@ -160,7 +160,14 @@ basicLCD& salvaLCD::operator<<(const char* c) {
             Cursor.column = 15;
         }
     }
-        
+
+    //Imprimiemos la pantalla de nuevo
+    al_clear_to_color(al_map_rgb_f(0, 1, 0));//Limpiamos todo
+
+    al_draw_text(font, al_map_rgb(255, 255, 255), W / 4, H / 4, 0, information_r1.c_str());     //Imprimimos primera fila
+    al_draw_text(font, al_map_rgb(255, 255, 255), W / 4, H * (0.75), 0, information_r2.c_str());//Imprimirmos segunda fila
+
+    al_flip_display();//Imprimimos todo lo escrito
 
     return *this; 
     
@@ -229,6 +236,7 @@ bool salvaLCD:: lcdMoveCursorLeft() {
 }
 
 bool salvaLCD::lcdSetCursorPosition(const cursorPosition pos) {
+    
     if( (pos.row == 0) || (pos.row ==1))
         Cursor.row = pos.row;
     if((pos.column > 0) && (pos.column < 16))//Porque la consigna dice 19
