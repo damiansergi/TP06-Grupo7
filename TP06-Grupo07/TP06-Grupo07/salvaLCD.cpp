@@ -121,16 +121,19 @@ basicLCD& salvaLCD::operator<<(const char* c) {
 
     string aux = string(c);
     
+    if (aux.length() > 32)
+        aux = aux.substr(aux.length() - 32, aux.length());//Corto lo que no quiero
+
     //Ver bien el tema de los nuemros de columna
     if (Cursor.row == 0)//Si estamos en la primera fila
     {
-        if (aux.length() > (16 - Cursor.column) )//Y el string se va de linea, osea mueve al cursor mas alla de 16
+        if (aux.length() > (16 - Cursor.column))//Y el string se va de linea, osea mueve al cursor mas alla de 16
         {
             information_r1.replace(Cursor.column, 15, aux.substr(0, (16 - Cursor.column)));//Escribo lo que puedo en la linea 1
 
             if ((aux.length() - (16 - Cursor.column)) < 16)//Si lo que me queda por escribir es mas chico que 16, lo escribo
             {
-                information_r2.replace(0, (aux.length() - (16 - Cursor.column + 1 )), aux.substr((16 - Cursor.column), aux.length()));
+                information_r2.replace(0, (aux.length() - (16 - Cursor.column + 1)), aux.substr((16 - Cursor.column), aux.length()));
 
                 for (int i = 0; i < aux.length(); i++) {
                     lcdMoveCursorRight();
@@ -140,7 +143,7 @@ basicLCD& salvaLCD::operator<<(const char* c) {
             {
                 information_r2.replace(0, 15, aux.substr(16, 16));
                 Cursor.column = 15;
-            }  
+            }
         }
         else
         {
@@ -151,15 +154,32 @@ basicLCD& salvaLCD::operator<<(const char* c) {
         }
 
     }
-    else if (Cursor.row == 1)
+    else if (Cursor.row == 1)//Si estoy en la fila 2
     {
-        information_r2.replace(Cursor.column, 15, aux);
-        for (int i = 0; i < aux.length(); i++) {
-            lcdMoveCursorRight();
-        }
-        if (Cursor.column > 15)
+        if (aux.length() > (16 - Cursor.column))//Y el string se va de linea, osea mueve al cursor mas alla de 16
         {
-            Cursor.column = 15;
+            information_r2.replace(Cursor.column, 15, aux.substr(0, (16 - Cursor.column)));//Escribo lo que puedo en la linea 2
+
+            if ((aux.length() - (16 - Cursor.column)) < 16)//Si lo que me queda por escribir es mas chico que 16, lo escribo
+            {
+                information_r1.replace(0, (aux.length() - (16 - Cursor.column + 1)), aux.substr((16 - Cursor.column), aux.length()));
+
+                for (int i = 0; i < aux.length(); i++) {
+                    lcdMoveCursorRight();
+                }
+            }
+            else//Si el arreglo no entra en toda la linea dos lo corto 
+            {
+                information_r1.replace(0, 15, aux.substr(16, 16));
+                Cursor.column = 15;
+            }
+        }
+        else
+        {
+            information_r2.replace(Cursor.column, 15, aux);
+            for (int i = 0; i < aux.length(); i++) {
+                lcdMoveCursorRight();
+            }
         }
     }
 
@@ -201,8 +221,11 @@ bool salvaLCD:: lcdMoveCursorDown(){
 
 bool salvaLCD:: lcdMoveCursorRight() {
     if (Cursor.column == 15) {   //Si estamos en el ultimo elemento de una fila
-        if (Cursor.row == 1)     //Y es la segunda fila
-            return true;         // Nos quedamos donde estamos
+        if (Cursor.row == 1) {     //Y es la segunda fila
+            Cursor.column = 0;
+            Cursor.row = 0;
+            return true;         // Nos vamos al elemento (0,0)
+        }
         else if (Cursor.row == 0)//Si es la fila es la primera
         {
             Cursor.row = 1;      //Nos ponemos en el primer elemento de la segunda
@@ -215,13 +238,17 @@ bool salvaLCD:: lcdMoveCursorRight() {
         Cursor.column++;//Pasamos al siguiente elemento
         return true;
     }
+
     return false; //Column.row esta fuera de margen
 }
 
 bool salvaLCD:: lcdMoveCursorLeft() {
     if (Cursor.column == 0) {   //Si estamos en el primer elemento de una fila
-        if (Cursor.row == 0)     //Y es la primera fila
-            return true;         // Nos quedamos donde estamos
+        if (Cursor.row == 0) {     //Y es la primera fila
+            Cursor.row = 1;
+            Cursor.column = 15;
+            return true;         // Nos movemos al (1,15) ultimo elemento
+        }
         else if (Cursor.row == 1)//Si es la fila es la segunda
         {
             Cursor.row = 0;      //Nos ponemos en el ultimo elemento de la primera
