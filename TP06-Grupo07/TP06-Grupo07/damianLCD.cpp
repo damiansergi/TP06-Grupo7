@@ -135,6 +135,11 @@ basicLCD& damianLCD::operator<<(const char* c) {
          copyIndex++;
 
          lcdMoveCursorRight();
+
+         if (pos.column == 0 && pos.row == 0) {
+
+             index = CursorPosToNumber(pos);
+         }
      }
 
     printMessage();
