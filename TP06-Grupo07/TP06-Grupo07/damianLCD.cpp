@@ -94,11 +94,11 @@ bool damianLCD::lcdClearToEOL(){
 
     if (pos.row == 0) {
 
-        message.replace(0, 16, "                ");
+        message.replace(pos.column, 16 - pos.column, 16 - pos.column, ' ');
     }
     else if (pos.row == 1) {
 
-        message.replace(16, 16, "                ");
+        message.replace(pos.column + 16, 16 - pos.column, 16 - pos.column, ' ');
     }
 
     printMessage();

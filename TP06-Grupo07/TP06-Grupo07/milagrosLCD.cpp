@@ -136,11 +136,11 @@ bool milagrosLCD::lcdClearToEOL() {
 	}*/
 	if (position.row == 0) {
 
-		data.replace(0, 16, "                ");
+		data.replace(position.column, 16 - position.column, 16 - position.column, ' ');
 	}
 	else if (position.row == 1) {
 
-		data.replace(16, 16, "                ");
+		data.replace(position.column + 16, 16 - position.column, 16 - position.column, ' ');
 	}
 	write_display();
 	return clearOK;

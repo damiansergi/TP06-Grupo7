@@ -15,9 +15,11 @@ void testLCD(basicLCD* p2LCD) {
 
         *p2LCD << "There are no wrong notes on piano";
 
-        al_rest(DELAY);
+        al_rest(DELAY );
         cout << "test 1 finished" << endl; 
 
+        cursorPosition testPos = { 0 , 5 };
+        p2LCD->lcdSetCursorPosition(testPos);
         p2LCD->lcdClearToEOL();
 
         al_rest(DELAY);
@@ -33,7 +35,8 @@ void testLCD(basicLCD* p2LCD) {
         al_rest(DELAY);
         cout << "test 4 finished" << endl;
 
-        cursorPosition testPos = { 0, 10 };
+        testPos.row = 0;
+        testPos.column = 10;
         p2LCD->lcdSetCursorPosition(testPos);
         *p2LCD << 'I';
 
@@ -80,7 +83,6 @@ void testLCD(basicLCD* p2LCD) {
         al_rest(5 * DELAY);
         cout << "test 11 finished" << endl;
     }
-
 }
 
 

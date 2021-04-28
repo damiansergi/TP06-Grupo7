@@ -98,7 +98,7 @@ basicLCD& salvaLCD::operator<<(const unsigned char c) {
 
     if (isprint(c)) {
         if (Cursor.row == 0)
-            information_r1.replace(Cursor.column, 1, 1, c);//TODO
+            information_r1.replace(Cursor.column, 1, 1, c);
         else if (Cursor.row == 1)
             information_r2.replace(Cursor.column, 1, 1, c);
 
