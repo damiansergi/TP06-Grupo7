@@ -173,20 +173,6 @@ basicLCD& milagrosLCD::operator<<(const unsigned char c) {
 		lcdMoveCursorRight();
 
 	}
-	/*
-	if (position.column == 15) {
-		position.column = 0;
-		if (position.row == 0) {
-			position.row = 1;
-		}
-		else if (position.column == 1) {
-			position.row = 0;
-		}
-	}
-	else {
-		++position.column;
-	}
-	*/
 
 	return *this;
 }

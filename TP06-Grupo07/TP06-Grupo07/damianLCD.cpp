@@ -153,7 +153,6 @@ bool damianLCD::lcdMoveCursorLeft() {
         pos.column--;
     }
 
-
     return true;
 }
 
@@ -167,6 +166,13 @@ bool damianLCD::lcdMoveCursorRight() {
     else if (pos.column < 15) {
         pos.column++;
     }
+    else if (pos.column == 15 && pos.row == 1) {
+        pos.column = 0;
+        pos.row = 0;
+    }
+    else {
+        return false;
+    }
 
     return true;
 }
@@ -176,6 +182,9 @@ bool damianLCD::lcdMoveCursorDown() {
     if (pos.row == 0) {
         pos.row++;
     }
+    else {
+        return false;
+    }
 
     return true;
 }
@@ -184,6 +193,9 @@ bool damianLCD::lcdMoveCursorUp() {
 
     if (pos.row == 1) {
         pos.row--;
+    }
+    else {
+        return false;
     }
 
     return true;

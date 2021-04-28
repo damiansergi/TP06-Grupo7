@@ -89,7 +89,7 @@ int main()
 
     basicLCD* p2LCD = nullptr;
 
-    for (int i = 3; i <= 3; i++) { 
+    for (int i = 1; i <= 3; i++) { 
 
         if (i == 1) {
 
