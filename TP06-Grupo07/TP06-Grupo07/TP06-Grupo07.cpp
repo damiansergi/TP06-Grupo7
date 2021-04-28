@@ -5,7 +5,7 @@
 #include "milagrosLCD.h"
 #include "salvaLCD.h"
 
-#define DELAY 1 //seconds
+#define DELAY 2 //seconds
 
 void testLCD(basicLCD* p2LCD) {
 
@@ -59,13 +59,13 @@ void testLCD(basicLCD* p2LCD) {
         p2LCD->lcdMoveCursorRight();
         *p2LCD << 'I';
 
-        al_rest(DELAY*5);
+        al_rest(DELAY);
         cout << "test 8 finished" << endl;
 
         p2LCD->lcdMoveCursorUp();
         *p2LCD << "TEST123";
 
-        al_rest(DELAY*5);
+        al_rest(DELAY);
         cout << "test 9 finished" << endl;
 
         testPos.row = 1;
@@ -74,13 +74,13 @@ void testLCD(basicLCD* p2LCD) {
         p2LCD->lcdSetCursorPosition(testPos);
         *p2LCD << "hola";
 
-        al_rest(5 * DELAY);
+        al_rest(DELAY);
         cout << "test 10 finished" << endl;
 
         p2LCD->lcdClear();
         *p2LCD << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
-        al_rest(5 * DELAY);
+        al_rest(DELAY);
         cout << "test 11 finished" << endl;
     }
 }
@@ -91,7 +91,7 @@ int main()
 
     basicLCD* p2LCD = nullptr;
 
-    for (int i = 3; i <= 3; i++) { 
+    for (int i = 1; i <= 3; i++) { 
 
         if (i == 1) {
 
