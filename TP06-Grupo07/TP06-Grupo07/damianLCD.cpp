@@ -45,8 +45,8 @@ damianLCD::damianLCD() {
 
     display = al_create_display(ALLEGRODISPLAYWIDTH, ALLEGRODISPLAYHEIGHT);
 
-    pos.column = 1;
-    pos.row = 1;
+    pos.column = 0;
+    pos.row = 0;
     message = string("                                ");
 }
 
@@ -82,8 +82,8 @@ bool damianLCD::lcdClear() {
 
     message.clear();
     message = string("                                ");
-    pos.row = 1;
-    pos.column = 1;
+    pos.row = 0;
+    pos.column = 0;
 
     printMessage();
 
@@ -92,11 +92,11 @@ bool damianLCD::lcdClear() {
 
 bool damianLCD::lcdClearToEOL(){  
 
-    if (pos.row == 1) {
+    if (pos.row == 0) {
 
         message.replace(0, 16, "                ");
     }
-    else if (pos.row == 2) {
+    else if (pos.row == 1) {
 
         message.replace(16, 16, "                ");
     }
@@ -112,6 +112,7 @@ basicLCD& damianLCD::operator<<(const unsigned char c) {
         message.replace(CursorPosToNumber(pos), 1, 1, c);
 
         printMessage();
+        lcdMoveCursorRight();
     }
     return *this;
 }
@@ -127,7 +128,7 @@ basicLCD& damianLCD::operator<<(const char* c) {
          auxString.erase(0, 1);
      }
 
-     while (index < 32 && copyIndex < auxString.size() ) {
+     while (index < 32 && copyIndex < (int) auxString.size() ) {
 
          message.replace(index, 1, 1, auxString[copyIndex] );
          index++;
@@ -141,12 +142,12 @@ basicLCD& damianLCD::operator<<(const char* c) {
 
 bool damianLCD::lcdMoveCursorLeft() {
 
-    if (pos.column == 1 && pos.row == 2) {
+    if (pos.column == 0 && pos.row == 1) {
 
-        pos.column = 16;
-        pos.row = 1;
+        pos.column = 15;
+        pos.row = 0;
     }
-    else if (pos.column > 1) {
+    else if (pos.column > 0) {
         pos.column--;
     }
 
@@ -156,12 +157,12 @@ bool damianLCD::lcdMoveCursorLeft() {
 
 bool damianLCD::lcdMoveCursorRight() {
 
-    if (pos.column == 16 && pos.row == 1) {
+    if (pos.column == 15 && pos.row == 0) {
 
-        pos.column = 1;
-        pos.row = 2;
+        pos.column = 0;
+        pos.row = 1;
     }
-    else if (pos.column < 16) {
+    else if (pos.column < 15) {
         pos.column++;
     }
 
@@ -170,7 +171,7 @@ bool damianLCD::lcdMoveCursorRight() {
 
 bool damianLCD::lcdMoveCursorDown() {
 
-    if (pos.row == 1) {
+    if (pos.row == 0) {
         pos.row++;
     }
 
@@ -179,7 +180,7 @@ bool damianLCD::lcdMoveCursorDown() {
 
 bool damianLCD::lcdMoveCursorUp() {
 
-    if (pos.row == 2) {
+    if (pos.row == 1) {
         pos.row--;
     }
 
@@ -188,7 +189,7 @@ bool damianLCD::lcdMoveCursorUp() {
 
 bool damianLCD::lcdSetCursorPosition(const cursorPosition pos) {
 
-    if (pos.column <= 16 && pos.row <= 2 && pos.column >= 1 && pos.row >= 1) {
+    if (pos.column <= 15 && pos.row <= 1 && pos.column >= 0 && pos.row >= 0) {
             
         this->pos = pos;
     }
@@ -240,7 +241,7 @@ bool damianLCD::printMessage() {
             al_map_rgb(0, 0, 0), 5);
     }
 
-    for (int i = 0; i < message.size(); i++) {
+    for (int i = 0; i < (int) message.size(); i++) {
         buffer[0] = message[i];
 
         if (i < 16) {
@@ -261,5 +262,5 @@ bool damianLCD::printMessage() {
 
 static int CursorPosToNumber(cursorPosition pos) {  //Translate from the cursor position to the index in the string
 
-    return (pos.row - 1) * 16 + (pos.column - 1);
+    return (pos.row) * 16 + (pos.column);
 }

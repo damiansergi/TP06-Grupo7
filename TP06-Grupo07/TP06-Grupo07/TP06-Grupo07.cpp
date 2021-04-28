@@ -27,7 +27,7 @@ void testLCD(basicLCD* p2LCD) {
 
         al_rest(DELAY);
 
-        cursorPosition testPos = { 1,10 };
+        cursorPosition testPos = { 0, 10 };
         p2LCD->lcdSetCursorPosition(testPos);
         *p2LCD << 'I';
 
@@ -53,6 +53,11 @@ void testLCD(basicLCD* p2LCD) {
         *p2LCD << "TEST123";
 
         al_rest(DELAY);
+
+        p2LCD->lcdClear();
+        *p2LCD << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+        al_rest(5 * DELAY);
     }
 
 }

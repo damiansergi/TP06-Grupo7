@@ -59,7 +59,7 @@ void milagrosLCD::write_display() {
 
 	al_clear_to_color(AMARILLO);
 	char print[2] = { 1,'\0'};
-	for (int i = 0; i < data.size(); ++i) {
+	for (int i = 0; i < (int)data.size(); ++i) {
 		print[0] = data[i];
 		if (i < 16) {
 			al_draw_text(font, NEGRO, getCoords(i), getCoords(0), 0, print);
@@ -161,24 +161,32 @@ bool milagrosLCD::lcdClearToEOL() {
 * lcd << ‘a’ << ‘b’ << ‘c’;
 *=====================================================*/
 basicLCD& milagrosLCD::operator<<(const unsigned char c) {
+
+	if (isprint(c)) {
+		if (position.row == 0)
+			data.replace(position.column, 1, 1, c);
+		else if (position.row == 1)
+			data.replace(position.column + 16, 1, 1, c);
+
+		write_display();
+
+		lcdMoveCursorRight();
+
+	}
+	/*
 	if (position.column == 15) {
 		position.column = 0;
 		if (position.row == 0) {
 			position.row = 1;
 		}
-		else if (position.column == 1){
+		else if (position.column == 1) {
 			position.row = 0;
 		}
 	}
 	else {
 		++position.column;
 	}
-	if (position.row == 0)
-		data.replace(position.column, 1, 1, c);
-	else if (position.row == 1)
-		data.replace(position.column+16, 1, 1, c);
-	cout << data << endl;
-	write_display();
+	*/
 
 	return *this;
 }
@@ -200,7 +208,7 @@ basicLCD& milagrosLCD::operator<<(const unsigned char c) {
 basicLCD& milagrosLCD::operator<<(const char* c) {
 	string aux = string(c);
 	int cont = 0;
-	while(aux.size() > 32) {
+	while((int) aux.size() > 32) {
 		aux.erase(0, 1);
 	}
 	while (cont < aux.size()) {
@@ -326,7 +334,7 @@ bool milagrosLCD::lcdMoveCursorLeft() {
 bool milagrosLCD::lcdSetCursorPosition(const cursorPosition pos) {
 	bool setOK = true; //Vale true si todo bien y false en caso contrario.
 	//Me fijo que los valores que me piden son correctos.
-	if (pos.column >= 2 || pos.column < 0 || pos.row >= 16 || pos.row < 0) {
+	if (pos.row >= 2 || pos.row < 0 || pos.column >= 16 || pos.column < 0) {
 		setOK = false;
 		cout << "Invalid cursor position!" << endl;
 	}
